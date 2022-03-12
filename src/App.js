@@ -5,9 +5,15 @@ export default function App() {
 
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
+  const [direction, setDirection] = useState('moveDown');
   const canvasRef = useRef(null);
-  
+  const linkUpRef = useRef(null);
+  const linkLeftRef = useRef(null);
+  const linkDownRef = useRef(null);
+  const linkRightRef = useRef(null);
+
   function move(direction) {
+    setDirection(direction);
     if (direction === "moveUp") {
       setY((y) => y - 10);
     }
@@ -31,10 +37,24 @@ export default function App() {
   useEffect(() => {
     const context = canvasRef.current.getContext('2d');
     context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    context.fillRect(x, y, 100, 100);
-    console.log(window.innerHeight, window.innerWidth);
-    console.log(x, y);
-  }, [x, y]);
+    let linkRef;
+    switch(direction) {
+      case 'moveUp': 
+        linkRef = linkUpRef;
+        break;
+      case 'moveRight': 
+        linkRef = linkRightRef;
+        break;
+      case 'moveLeft': 
+        linkRef = linkLeftRef;
+        break;
+      case 'moveDown': 
+        linkRef = linkDownRef;
+        break;
+      default: break;
+    }
+    context.drawImage(linkRef.current, x, y);
+  }, [x, y, direction]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -69,10 +89,10 @@ export default function App() {
       </div>
 
       <div className="images">
-        <img src="https://i.imgur.com/JYUB0m3.png" alt="Down" />
-        <img src="https://i.imgur.com/GEXD7bk.gif" alt="Right" />
-        <img src="https://i.imgur.com/XSA2Oom.gif" alt="Up" />
-        <img src="https://i.imgur.com/4LGAZ8t.gif" alt="Left" />
+        <img src="https://i.imgur.com/JYUB0m3.png" alt="Down" ref={linkDownRef} />
+        <img src="https://i.imgur.com/GEXD7bk.gif" alt="Right" ref={linkRightRef} />
+        <img src="https://i.imgur.com/XSA2Oom.gif" alt="Up" ref={linkUpRef} />
+        <img src="https://i.imgur.com/4LGAZ8t.gif" alt="Left" ref={linkLeftRef} />
       </div>
     </div>
   );
