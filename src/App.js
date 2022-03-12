@@ -1,16 +1,71 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 export default function App() {
+
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  const canvasRef = useRef(null);
+  
+  function move(direction) {
+    if (direction === "moveUp") {
+      setY((y) => y - 10);
+    }
+    if (direction === "moveLeft") {
+      setX((x) => x - 10);
+    }
+    if (direction === "moveDown") {    
+      setY((y) => y + 10);
+    }
+    if (direction === "moveRight") {
+      setX((x) => x + 10);
+    }
+  }
+  
+  useEffect(() => {
+    const context = canvasRef.current.getContext('2d');
+    context.canvas.width = window.innerWidth;
+    context.canvas.height = window.innerHeight;
+  }, []);
+
+  useEffect(() => {
+    const context = canvasRef.current.getContext('2d');
+    context.clearRect(0, 0, window.innerHeight, window.innerWidth);
+    context.fillRect(x, y, 100, 100);
+  }, [x, y]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowUp") {
+        move('moveUp');
+      }
+      if (e.key === "ArrowLeft") {
+        move('moveLeft');
+      }
+      if (e.key === "ArrowDown") {
+        move('moveDown');
+      }
+      if (e.key === "ArrowRight") {
+        move('moveRight');
+      }
+    });
+
+    function handleClearKeyDown(e) {
+      
+    }
+
+    return () => window.removeEventListener('keydown', handleClearKeyDown)
+  }, [])
+  
   return (
     <div className="app">
-      <canvas />
+      <canvas ref={canvasRef} />
 
       <div className="arrows">
-        <button>Up</button>
-        <button>Left</button>
-        <button>Down</button>
-        <button>Right</button>
+        <button onClick={() => move('moveUp')}>Up</button>
+        <button onClick={() => move('moveLeft')}>Left</button>
+        <button onClick={() => move('moveDown')}>Down</button>
+        <button onClick={() => move('moveRight')}>Right</button>
       </div>
 
       <div className="images">
