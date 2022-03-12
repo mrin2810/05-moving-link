@@ -30,12 +30,16 @@ export default function App() {
 
   useEffect(() => {
     const context = canvasRef.current.getContext('2d');
-    context.clearRect(0, 0, window.innerHeight, window.innerWidth);
+    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     context.fillRect(x, y, 100, 100);
+    console.log(window.innerHeight, window.innerWidth);
+    console.log(x, y);
   }, [x, y]);
 
   useEffect(() => {
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    function handleKeyDown(e) {
       if (e.key === "ArrowUp") {
         move('moveUp');
       }
@@ -48,13 +52,9 @@ export default function App() {
       if (e.key === "ArrowRight") {
         move('moveRight');
       }
-    });
-
-    function handleClearKeyDown(e) {
-      
     }
 
-    return () => window.removeEventListener('keydown', handleClearKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
   
   return (
